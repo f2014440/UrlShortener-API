@@ -20,13 +20,16 @@ public class UrlShortenerController {
 
 
     @GetMapping(value = "{shortUrl}/{clientId}")
-    public ResponseEntity<Void> getAndRedirect(@PathVariable("shortUrl") String shortUrl, @PathVariable("clientId") String clientId) {
+    public String getAndRedirect(@PathVariable("shortUrl") String shortUrl, @PathVariable("clientId") String clientId) {
         String url = urlService.getOriginalUrl(clientId, shortUrl);
         if (null == url){
             ResponseEntity.status(HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT)
-                .location(URI.create(url))
-                .build();
+        return url;
+    }
+
+    @GetMapping(value = "getHits/{shortUrl}")
+    public Integer getHitsforUrl(@PathVariable("shortUrl") String shortUrl){
+        return urlService.getHits(shortUrl);
     }
 }
